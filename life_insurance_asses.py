@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split,GridSearchCV
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import r2_score
 import re
+import mord
 
 
 #Define the file names
@@ -52,16 +53,13 @@ X = pd.concat([X, catagorical_data], axis=1)
 X_train, X_test, y_train, y_test = train_test_split(X,target,test_size=0.33,random_state=22)
 #
 #
-xgb_model = xgb.XGBRegressor()
-xgb_reg = GridSearchCV(xgb_model,
-                   {'max_depth': [2,4,6],
-                    'n_estimators': [50,100,200]}, verbose=1)
-xgb_reg.fit(X_train, y_train)
-pred_xgb=xgb_reg.best_estimator_.predict(X_test)
-print('xgb.XGBRegressor')
-print(xgb_reg.best_score_)
-print(xgb_reg.best_params_)
-xgb_model.fit(X_train,y_train)
-#pred_xgb = xgb_model.predict(data=X_test)
-print(r2_score(y_test, pred_xgb))
+
+
+model=mord.LogisticIT(alpha=0.1, verbose=0, max_iter=10000)
+results=model.fit(X_train,y_train)
+pred=model.predict(X_test)
+score=model.score(X_test, y_test)
+print('LogisticIT')
+print(score)
+
 
